@@ -1,0 +1,49 @@
+schema_version: 1
+
+context:
+  version: "0.3.1"
+  python_min: "3.6"
+
+package:
+  name: "tex2pix"
+  version: ${{ version }}
+
+source:
+  url: https://pypi.org/packages/source/t/tex2pix/tex2pix-${{ version }}.tar.gz
+  sha256: d03c2b6b5ec0aa60c18e01282c6b8ffc2c74c7bbd647f00c6088192db18b16dc
+  patches:
+    - use-setuptools-over-distutils.patch
+    - add-python_requires.patch
+
+build:
+  number: 1
+  noarch: python
+  script: ${{ PYTHON }} -m pip install . -vv --no-deps --no-build-isolation
+
+requirements:
+  host:
+    - python ${{ python_min }}.*
+    - pip
+    - setuptools
+  run:
+    - python >=${{ python_min }}
+    - which
+
+tests:
+  - python:
+      imports:
+        - tex2pix
+      pip_check: true
+      python_version:
+        - ${{ python_min }}.*
+        - "*"
+
+about:
+  summary: Lightweight renderer of LaTeX to a variety of graphics formats
+  license: GPL-3.0-or-later
+  license_file: LICENSE
+  homepage: https://pypi.org/project/tex2pix/
+
+extra:
+  recipe-maintainers:
+    - matthewfeickert
